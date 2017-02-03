@@ -1,0 +1,37 @@
+***********************THE USER INTERFACE*********************
+
+The game will start with a menu screen with button options
+
+Those options are as follows:
+	1) Normal (3x3)
+	2) Hard   (6x6)
+	3) Extreme(9x9)
+	4) Enter your own size
+
+The user will control the sliding with the arrow keys as follows:
+
+	left -  moves the tile on the right (if there is one) of the empty space into the empty space
+	right - moves the tile on the left (if there is one) of the empty space into the empty space
+	up -    moves the tile below (if there is one) the empty space into the empty space
+	down -  moves the tile above (if there is one) the empty space into the empty space
+
+The user will also have these additional options:
+
+	1) Randomize       - The computer does a large number of random moves
+	2) Solve it for me - The computer solves it for the user, showing every move as it goes
+
+
+***********************THE MECHANICS BEHIND*********************
+
+The puzzle information will be stored in a variable size vector.
+
+	main() //Handles main menu options and initializes PuzzleWindow
+
+	Puzzle() //Class that handles the game window inputs and everything
+		play()//looping function that accepts inputs and filters what functions are called next
+		getInput()//
+		scramble() //randomizez the game board with a large amount of moves
+		move() //Accepts a arrow key direction and moves the proper tile
+		checkSuccess() //function to be called after every move to check if the puzzle has been solved
+		solve() //Function to solve the puzzle, will have various algorithms to test
+		
