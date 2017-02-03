@@ -21,7 +21,6 @@ Puzzle::Puzzle()
 int Puzzle::start(){
 	this->print();
 	char input;
-
 	while(input != 'q'){
 		cin >> input;
 	
@@ -33,6 +32,8 @@ int Puzzle::start(){
 			move('s');
 		else if(input == 'd')
 			move('d');
+		else if(input == '1')
+			this->scramble();
 
 		this->print();
 	}
@@ -92,7 +93,29 @@ int Puzzle::move(char direction){
 
 int Puzzle::scramble()
 {
-
+	int randomNumber;
+	mt19937 randomGenerator(time(0));
+	uniform_int_distribution<int> roll(1,4);
+	for(int i = 0; i < 1000; i++)
+	{
+		randomNumber = roll(randomGenerator);
+		switch(randomNumber){
+			case 1:
+				move('s');
+				break;
+			case 2:
+				move('a');
+				break;
+			case 3:
+				move('w');
+				break;
+			case 4:
+				move('d');
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 

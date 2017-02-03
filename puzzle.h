@@ -7,6 +7,8 @@
 #include <ncurses.h>
 #include <iostream>
 #include <stdio.h>
+#include <random>
+#include <ctime>
 
 using namespace std;
 
