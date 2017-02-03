@@ -20,6 +20,7 @@ public:
 
 private:
 	int board[PUZZLE_SIZE][PUZZLE_SIZE];
+	int controlBoard[PUZZLE_SIZE][PUZZLE_SIZE];
 
 	char getInput();
 	int move(char direction);

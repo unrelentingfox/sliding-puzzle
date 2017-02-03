@@ -8,6 +8,7 @@ Puzzle::Puzzle()
 		for(int x = 0; x< PUZZLE_SIZE; x++)
 		{
 			board[y][x]= i;
+			controlBoard[y][x]=i;
 			if(i < (PUZZLE_SIZE*PUZZLE_SIZE-1))
 				i++;
 			else
@@ -24,8 +25,14 @@ int Puzzle::start(){
 	while(input != 'q'){
 		cin >> input;
 	
-		if(input == 'w' || input == 'a' || input == 's' || input == 'd')
-			move(input);
+		if(input == 'w')
+			move('w');
+		else if(input == 'a')
+			move('a');
+		else if(input == 's')
+			move('s');
+		else if(input == 'd')
+			move('d');
 
 		this->print();
 	}
@@ -40,13 +47,15 @@ int Puzzle::move(char direction){
 	int emptyX = 0;
 	int emptyY = 0;
 
+	//find the empty puzzle peice
 	for(int y = 0; y < PUZZLE_SIZE; y++)
 	{
 		for(int x = 0; x < PUZZLE_SIZE; x++)
 		{
-			if(board[y][x] == 0)
+			if(board[y][x] == 0){
 				emptyY = y;
 				emptyX = x;
+			}
 		}
 	}
 
@@ -81,14 +90,29 @@ int Puzzle::move(char direction){
 }
 
 
-int Puzzle::scramble(){}
+int Puzzle::scramble()
+{
+
+}
 
 
-bool checkSuccess(){}
+bool Puzzle::checkSuccess()
+{
+	for (int y = 0; y < PUZZLE_SIZE; y++)
+	{
+		for(int x = 0; x < PUZZLE_SIZE; x++)
+		{
+			if(board[y][x] != controlBoard[y][x])
+				return false;
+		}
+	}
+	return true;
+}
 
 
 int Puzzle::print()
 {
+	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 	for (int y = 0; y < PUZZLE_SIZE; y++)
 	{
 		for(int x = 0; x< PUZZLE_SIZE; x++)
@@ -100,4 +124,6 @@ int Puzzle::print()
 		}
 		cout << endl;
 	}
+	if(this->checkSuccess())
+		cout << "!!VICTORY!!\n";
 }
