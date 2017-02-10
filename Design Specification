@@ -32,6 +32,6 @@ The puzzle information will be stored in a variable size vector.
 		getInput()//
 		scramble() //randomizez the game board with a large amount of moves
 		move() //Accepts a arrow key direction and moves the proper tile
-		checkSuccess() //function to be called after every move to check if the puzzle has been solved
+		compareStates() //function to be called after every move to check if the puzzle has been solved
 		solve() //Function to solve the puzzle, will have various algorithms to test
 		

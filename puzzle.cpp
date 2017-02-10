@@ -2,151 +2,27 @@
 
 Puzzle::Puzzle()
 {
-	int i = 1;
-	for (int y = 0; y < PUZZLE_SIZE; y++)
-	{
-		for(int x = 0; x< PUZZLE_SIZE; x++)
-		{
-			board[y][x]= i;
-			controlBoard[y][x]=i;
-			if(i < (PUZZLE_SIZE*PUZZLE_SIZE-1))
-				i++;
-			else
-				i = 0;
-		}
-	}
+	board = new Board(3);
 }
 
 
 int Puzzle::start(){
-	this->print();
+	board->print();
 	char input;
 	while(input != 'q'){
 		cin >> input;
 	
 		if(input == 'w')
-			move('w');
+			board->moveUp();
 		else if(input == 'a')
-			move('a');
+			board->moveLeft();
 		else if(input == 's')
-			move('s');
+			board->moveDown();
 		else if(input == 'd')
-			move('d');
+			board->moveRight();
 		else if(input == '1')
-			this->scramble();
+			board->scramble();
 
-		this->print();
+		board->print();
 	}
-}
-
-
-char Puzzle::getInput(){
-}
-
-int Puzzle::move(char direction){
-
-	int emptyX = 0;
-	int emptyY = 0;
-
-	//find the empty puzzle peice
-	for(int y = 0; y < PUZZLE_SIZE; y++)
-	{
-		for(int x = 0; x < PUZZLE_SIZE; x++)
-		{
-			if(board[y][x] == 0){
-				emptyY = y;
-				emptyX = x;
-			}
-		}
-	}
-
-	switch (direction){
-		case 'w':
-			if(emptyY < PUZZLE_SIZE-1){
-				board[emptyY][emptyX] = board[emptyY+1][emptyX];
-				board[emptyY+1][emptyX] = 0;
-			}
-			break;
-		case 'a':
-			if(emptyX < PUZZLE_SIZE-1){
-				board[emptyY][emptyX] = board[emptyY][emptyX+1];
-				board[emptyY][emptyX+1] = 0;
-			}
-			break;
-		case 's':
-			if(emptyY > 0){
-				board[emptyY][emptyX] = board[emptyY-1][emptyX];
-				board[emptyY-1][emptyX] = 0;
-			}
-			break;
-		case 'd':
-			if(emptyX > 0){
-				board[emptyY][emptyX] = board[emptyY][emptyX-1];
-				board[emptyY][emptyX-1] = 0;
-			}
-			break;
-		default:
-			break;
-	}
-}
-
-
-int Puzzle::scramble()
-{
-	int randomNumber;
-	mt19937 randomGenerator(time(0));
-	uniform_int_distribution<int> roll(1,4);
-	for(int i = 0; i < 1000; i++)
-	{
-		randomNumber = roll(randomGenerator);
-		switch(randomNumber){
-			case 1:
-				move('s');
-				break;
-			case 2:
-				move('a');
-				break;
-			case 3:
-				move('w');
-				break;
-			case 4:
-				move('d');
-				break;
-			default:
-				break;
-		}
-	}
-}
-
-
-bool Puzzle::checkSuccess()
-{
-	for (int y = 0; y < PUZZLE_SIZE; y++)
-	{
-		for(int x = 0; x < PUZZLE_SIZE; x++)
-		{
-			if(board[y][x] != controlBoard[y][x])
-				return false;
-		}
-	}
-	return true;
-}
-
-
-int Puzzle::print()
-{
-	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-	for (int y = 0; y < PUZZLE_SIZE; y++)
-	{
-		for(int x = 0; x< PUZZLE_SIZE; x++)
-		{
-			if(board[y][x] == 0)
-				cout << "  ";
-			else
-				cout << board[y][x] << " ";
-		}
-		cout << endl;
-	}
-	if(this->checkSuccess())
-		cout << "!!VICTORY!!\n";
 }
