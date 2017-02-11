@@ -24,8 +24,7 @@ int Puzzle::start(){
 			board->scramble();
 		else if(input == '0');
 			{
-				Solver *solver = new Solver();
-				solver->solve(board);
+
 			}
 
 		board->print();

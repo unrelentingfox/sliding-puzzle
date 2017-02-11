@@ -1,24 +1,24 @@
 #include "board.h"
 
 Board::Board(int size) {
+
 	PUZZLE_SIZE = size;
-	currState = new int*[PUZZLE_SIZE];
+	currState.resize(PUZZLE_SIZE, vector<int>(PUZZLE_SIZE));
+	goalState.resize(PUZZLE_SIZE, vector<int>(PUZZLE_SIZE));
 
 	int i = 1;
-	for (int y = 0; y < PUZZLE_SIZE; y++)
+	for (int y = 0; y < currState.size(); y++)
 	{
-		currState[y] = new int[PUZZLE_SIZE];
-
-		for (int x = 0; x < PUZZLE_SIZE; x++)
+		for (int x = 0; x < currState[y].size(); x++)
 		{
 			currState[y][x] = i;
+			goalState[y][x] = i;
 			if(i < (PUZZLE_SIZE*PUZZLE_SIZE-1))
 				i++;
 			else
 				i = 0;
 	   }
 	}
-	startState = this->copyState();
 }
 
 
@@ -117,9 +117,9 @@ int Board::scramble()
 int Board::print()
 {
 	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
-	for (int y = 0; y < PUZZLE_SIZE; y++)
+	for (int y = 0; y < currState.size(); y++)
 	{
-		for(int x = 0; x< PUZZLE_SIZE; x++)
+		for(int x = 0; x< currState[y].size(); x++)
 		{
 			if(currState[y][x] == 0)
 				cout << "  ";
@@ -133,19 +133,18 @@ int Board::print()
 }
 
 
-int** Board::copyState(){
-	int **copy = new int*[PUZZLE_SIZE];
+vector<vector<int>> Board::copyState(){
+	vector<vector<int>> copy;
 
-	for (int y = 0; y < PUZZLE_SIZE; y++)
+	copy.resize(PUZZLE_SIZE, vector<int>(PUZZLE_SIZE));
+
+	for (int y = 0; y < currState.size(); y++)
 	{
-		copy[y] = new int[PUZZLE_SIZE];
-
-		for (int x = 0; x < PUZZLE_SIZE; x++)
+		for (int x = 0; x < currState[y].size(); x++)
 		{
 			copy[y][x] = currState[y][x];
 	   }
 	}
-	return copy;
 }
 
 
@@ -154,7 +153,7 @@ bool Board::checkSuccess(){
 	{
 		for(int x = 0; x < PUZZLE_SIZE; x++)
 		{
-			if(startState[y][x] != currState[y][x])
+			if(goalState[y][x] != currState[y][x])
 				return false;
 		}
 	}
@@ -166,6 +165,6 @@ int Board::puzzleSize(){
 	return PUZZLE_SIZE;
 }
 
-int** Board::getGoalState(){
-	return startState;
+vector<vector<int>> Board::getGoalState(){
+	return goalState;
 }
