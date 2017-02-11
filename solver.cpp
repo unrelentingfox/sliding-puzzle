@@ -10,32 +10,32 @@ int Solver::solve(Board* board){
 	queue<Node*> openList;
 	list<Node*> closedList;
 
-	Node *start = new Node;
-	start->parent = NULL;
-	start->parentMove = "";
-	start->stateSize = board->puzzleSize();
-	start->state = board->copyState();
-	
-	openList->push(start);
+	Node *start = new Node(NULL, board->getCurrState(), 4);
+
+	openList.push(start);
 
 	 for(int i=0; i<10000; i++){
-	 	if(checkSuccess(openList->front()->state, board->getGoalState(), board->puzzleSize())){
+	 	generateNodes(openList.front(), openList, closedList);
+	 	if(compareStates(openList.front()->state, board->getGoalState())){
 	 		cout << "victory";
 	 		return 0;
-	 	}// } else {
-	// 		closedList->push_front(openList->front());
-	// 		openList->pop();
-	// 		generateNodes(openList->front(), openList, closedList);
-	// 	}
-	 }
+	 	} else {
+			closedList.push_front(openList.front());
+			openList.pop();
+		}
+	}
 }
 
-int Solver::compareNodes(Node *n1, Node *n2, int size){
-	for (int y = 0; y < size; y++)
+int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2){
+	if(s1.size() != s2.size() || s1[0].size() != s2[0].size()){
+		return false;
+	}
+
+	for (int y = 0; y < s1.size(); y++)
 	{
-		for(int x = 0; x < size; x++)
+		for(int x = 0; x < s1[y].size(); x++)
 		{
-			if(n1[y][x] != n2[y][x])
+			if(s1[y][x] != s2[y][x])
 				return false;
 		}
 	}
@@ -43,33 +43,31 @@ int Solver::compareNodes(Node *n1, Node *n2, int size){
 }
 
 
-int Solver::generateNodes(Node* current, queue<Node*> *openList, list<Node*> *closedList){
+int Solver::generateNodes(Node* current, queue<Node*> &openList, list<Node*> &closedList){
 	Node *temp;
 	for(int i = 0; i < 4; i++){
-		temp = new Node;
-		temp->state = copyState(current->state, current->stateSize);
-		moveState(temp->state, i, current->stateSize);
-		for(std::list<Node*>::iterator iterator=closedList->begin(); iterator != closedList->end(); ++iterator)
+		temp = new Node(current,current->state,i);
+		moveState(temp->state, i);
+		for(std::list<Node*>::iterator iterator=closedList.begin(); iterator != closedList.end(); ++iterator)
     	{
-    		if(compareNodes((*iterator)->state, temp->state, current->stateSize))
-    		{
+    		if(compareStates((*iterator)->state, temp->state))
     			delete temp;
-    		} else {
-    			openList->push(temp);
-    		}
+    	}
+    	if(temp){
+    		openList.push(temp);
     	}
 	}
 }
 
-int Solver::moveState(int **state, int direction, int size){
+int Solver::moveState(vector<vector<int>> &state, int direction){
 
 	int emptyX = 0;
 	int emptyY = 0;
 
 	//find the empty puzzle peice
-	for(int y = 0; y < size; y++)
+	for(int y = 0; y < state.size(); y++)
 	{
-		for(int x = 0; x < size; x++)
+		for(int x = 0; x < state[y].size(); x++)
 		{
 			if(state[y][x] == 0){
 				emptyY = y;
@@ -80,13 +78,13 @@ int Solver::moveState(int **state, int direction, int size){
 
 	switch (direction){
 		case 0:
-			if(emptyY < size-1){
+			if(emptyY < state.size()-1){
 				state[emptyY][emptyX] = state[emptyY+1][emptyX];
 				state[emptyY+1][emptyX] = 0;
 			}
 			break;
 		case 1:
-			if(emptyX < size-1){
+			if(emptyX < state[0].size()-1){
 				state[emptyY][emptyX] = state[emptyY][emptyX+1];
 				state[emptyY][emptyX+1] = 0;
 			}
@@ -106,20 +104,4 @@ int Solver::moveState(int **state, int direction, int size){
 		default:
 			break;
 	}
-}
-
-
-int** Solver::copyState(int** state, int size){
-	int **copy = new int*[size];
-
-	for (int y = 0; y < size; y++)
-	{
-		copy[y] = new int[size];
-
-		for (int x = 0; x < size; x++)
-		{
-			copy[y][x] = state[y][x];
-	   }
-	}
-	return copy;
 }

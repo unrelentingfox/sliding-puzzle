@@ -28,6 +28,7 @@ public:
 	vector<vector<int>> copyState();
 	int puzzleSize();
 	vector<vector<int>> getGoalState();
+	vector<vector<int>> getCurrState();
 
 };
 

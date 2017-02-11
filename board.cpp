@@ -168,3 +168,7 @@ int Board::puzzleSize(){
 vector<vector<int>> Board::getGoalState(){
 	return goalState;
 }
+
+vector<vector<int>> Board::getCurrState(){
+	return currState;
+}

@@ -9,6 +9,8 @@ Puzzle::Puzzle()
 int Puzzle::start(){
 	board->print();
 	char input;
+	Solver *solver = new Solver;
+
 	while(input != 'q'){
 		cin >> input;
 	
@@ -24,7 +26,7 @@ int Puzzle::start(){
 			board->scramble();
 		else if(input == '0');
 			{
-
+				solver->solve(board);
 			}
 
 		board->print();
