@@ -23,18 +23,18 @@ Board::Board(int size) {
 
 
 int Board::moveUp(){
-	this->move(1);
+	this->move(0);
 }
 
 int Board::moveLeft(){
-	this->move(2);
+	this->move(1);
 }
 
 int Board::moveDown(){
-	this->move(3);
+	this->move(2);
 }
 int Board::moveRight(){
-	this->move(4);
+	this->move(3);
 }
 
 
@@ -56,25 +56,25 @@ int Board::move(int direction){
 	}
 
 	switch (direction){
-		case 1:
+		case 0:
 			if(emptyY < PUZZLE_SIZE-1){
 				currState[emptyY][emptyX] = currState[emptyY+1][emptyX];
 				currState[emptyY+1][emptyX] = 0;
 			}
 			break;
-		case 2:
+		case 1:
 			if(emptyX < PUZZLE_SIZE-1){
 				currState[emptyY][emptyX] = currState[emptyY][emptyX+1];
 				currState[emptyY][emptyX+1] = 0;
 			}
 			break;
-		case 3:
+		case 2:
 			if(emptyY > 0){
 				currState[emptyY][emptyX] = currState[emptyY-1][emptyX];
 				currState[emptyY-1][emptyX] = 0;
 			}
 			break;
-		case 4:
+		case 3:
 			if(emptyX > 0){
 				currState[emptyY][emptyX] = currState[emptyY][emptyX-1];
 				currState[emptyY][emptyX-1] = 0;
@@ -90,11 +90,14 @@ int Board::scramble()
 {
 	int randomNumber;
 	mt19937 randomGenerator(time(0));
-	uniform_int_distribution<int> roll(1,4);
+	uniform_int_distribution<int> roll(0,3);
 	for(int i = 0; i < 1000; i++)
 	{
 		randomNumber = roll(randomGenerator);
 		switch(randomNumber){
+			case 0:
+				move(0);
+				break;
 			case 1:
 				move(1);
 				break;
@@ -103,9 +106,6 @@ int Board::scramble()
 				break;
 			case 3:
 				move(3);
-				break;
-			case 4:
-				move(4);
 				break;
 			default:
 				break;
@@ -164,4 +164,8 @@ bool Board::checkSuccess(){
 
 int Board::puzzleSize(){
 	return PUZZLE_SIZE;
+}
+
+int** Board::getGoalState(){
+	return startState;
 }

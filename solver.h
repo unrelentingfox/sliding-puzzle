@@ -24,7 +24,6 @@ class Solver {
 
 public:
 	Solver();
-	~Solver();
 	int solve(Board* board);
 
 

@@ -5,6 +5,44 @@ Solver::Solver(){
 }
 
 
+int Solver::solve(Board* board){
+
+	queue<Node*> openList;
+	list<Node*> closedList;
+
+	Node *start = new Node;
+	start->parent = NULL;
+	start->parentMove = "";
+	start->stateSize = board->puzzleSize();
+	start->state = board->copyState();
+	
+	openList->push(start);
+
+	 for(int i=0; i<10000; i++){
+	 	if(checkSuccess(openList->front()->state, board->getGoalState(), board->puzzleSize())){
+	 		cout << "victory";
+	 		return 0;
+	 	}// } else {
+	// 		closedList->push_front(openList->front());
+	// 		openList->pop();
+	// 		generateNodes(openList->front(), openList, closedList);
+	// 	}
+	 }
+}
+
+int Solver::compareNodes(Node *n1, Node *n2, int size){
+	for (int y = 0; y < size; y++)
+	{
+		for(int x = 0; x < size; x++)
+		{
+			if(n1[y][x] != n2[y][x])
+				return false;
+		}
+	}
+	return true;
+}
+
+
 int Solver::generateNodes(Node* current, queue<Node*> *openList, list<Node*> *closedList){
 	Node *temp;
 	for(int i = 0; i < 4; i++){
@@ -84,44 +122,4 @@ int** Solver::copyState(int** state, int size){
 	   }
 	}
 	return copy;
-}
-
-
-int Solver::compareNodes(int** n1, int** n2, int size){
-	for (int y = 0; y < size; y++)
-	{
-		for(int x = 0; x < size; x++)
-		{
-			if(n1[y][x] != n2[y][x])
-				return false;
-		}
-	}
-	return true;
-}
-
-
-
-int Solver::solve(Board* board){
-
-	queue<Node*> *openList;
-	list<Node*> *closedList;
-
-	Node *start = new Node;
-	start->parent = NULL;
-	start->parentMove = "";
-	start->stateSize = board->puzzleSize();
-	start->state = board->copyState();
-	
-	openList->push(start);
-
-	for(int i=0; i<10000; i++){
-		if(compareNodes(openList->front()->state, board->getGoalState(), board->puzzleSize())){
-			cout << "victory";
-			i = 9999;
-		} else {
-			closedList->push_front(openList->front());
-			openList->pop();
-			generateNodes(openList->front(), openList, closedList);
-		}
-	}
 }

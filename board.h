@@ -9,8 +9,14 @@ using namespace std;
 
 class Board 
 {
+	int** currState;
+
+	int move(int direction);
+	bool checkSuccess();
+	int PUZZLE_SIZE;
 
 public:
+	int** startState;
 	Board(int size=3);
 	~Board();
 	int moveUp();
@@ -21,12 +27,7 @@ public:
 	int print();
 	int** copyState();
 	int puzzleSize();
-private:
-	int** currState;
-	int** startState;
-	int move(int direction);
-	bool checkSuccess();
-	int PUZZLE_SIZE;
+	int** getGoalState();
 
 };
 

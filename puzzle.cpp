@@ -22,6 +22,11 @@ int Puzzle::start(){
 			board->moveRight();
 		else if(input == '1')
 			board->scramble();
+		else if(input == '0');
+			{
+				Solver *solver = new Solver();
+				solver->solve(board);
+			}
 
 		board->print();
 	}
