@@ -7,12 +7,15 @@
 
 using namespace std;
 
+/**
+ * @brief      Class for puzzle.
+ */
 class Puzzle 
 {
 	Board *board;
 
 public:
-	int start();
+	void start();
 
 };
 

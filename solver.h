@@ -9,6 +9,9 @@
 
 using namespace std;
 
+/**
+ * @brief      Class for solver.
+ */
 class Solver {
 
 	struct Node {
@@ -24,15 +27,13 @@ class Solver {
 		}
 	};
 
-	int generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList);
-	int moveState(vector<vector<int>> &state, int direction);
-	int compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2);
-	int checkSuccess(Node* Node);
+	void generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList);
+	void moveState(vector<vector<int>> &state, int direction);
+	bool compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2);
 	vector<vector<int>> copyState(vector<vector<int>> &state);
 
 public:
-	Solver();
-	int solve(Board* board);
+	void solve(Board* board);
 
 
 };
