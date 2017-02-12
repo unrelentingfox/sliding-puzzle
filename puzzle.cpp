@@ -24,10 +24,8 @@ int Puzzle::start(){
 			board->moveRight();
 		else if(input == '1')
 			board->scramble();
-		else if(input == '0');
-			{
-				solver->solve(board);
-			}
+		else if(input == '0')
+			solver->solve(board);
 
 		board->print();
 	}

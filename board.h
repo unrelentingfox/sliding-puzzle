@@ -13,12 +13,12 @@ class Board
 	vector<vector<int>> goalState;
 	vector<vector<int>> currState;
 
-	int move(int direction);
 	bool checkSuccess();
 	int PUZZLE_SIZE;
 
 public:
 	Board(int size = 3);
+	int move(int direction);
 	int moveUp();
 	int moveLeft();
 	int moveDown();
