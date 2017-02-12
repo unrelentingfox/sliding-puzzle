@@ -83,6 +83,7 @@ int Board::move(int direction){
 		default:
 			break;
 	}
+	this->print();
 }
 
 
@@ -91,7 +92,7 @@ int Board::scramble()
 	int randomNumber;
 	mt19937 randomGenerator(time(0));
 	uniform_int_distribution<int> roll(0,3);
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 31; i++)
 	{
 		randomNumber = roll(randomGenerator);
 		switch(randomNumber){

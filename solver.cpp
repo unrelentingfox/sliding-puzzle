@@ -7,41 +7,52 @@ Solver::Solver(){
 
 int Solver::solve(Board* board){
 
-	queue<Node*> openList;
+	deque<Node*> openList;
 	deque<Node*> closedList;
-	stack<int> solution;
+	deque<int> solution;
 
 	bool success = false;
 
 	Node *start = new Node(NULL, board->getCurrState(), 4);
 
-	openList.push(start);
+	openList.push_back(start);
 
-	for(int i=0; i<100000 && success == false; i++){
+	int nodes;
+	clock_t before = clock();
+	cout << "Finding solution...\n";
+	for(nodes = 0; success == false; nodes++){
 		generateNodes(openList.front(), openList, closedList);
 	 	if(compareStates(openList.front()->state, board->getGoalState())){
-	 		cout << "victory";
 	 		success = true;
 	 	} else {
-			closedList.push_front(openList.front());
-			openList.pop();
+	 		// cout << "Nodes visited: " << nodes << endl;
+			closedList.push_back(openList.front());
+			openList.pop_front();
 		}
 	}
+	clock_t after = clock();
+
+
+	float time = ((float)after - (float)before)/CLOCKS_PER_SEC;
 
 	Node* temp = openList.front();
-	while(temp->parent != NULL){
-		solution.push(temp->parentMove);
+	int moves;
+	for(moves = 0; temp->parent != NULL; moves++){
+		solution.push_back(temp->parentMove);
 		temp = temp->parent;
 	}
 
+	board->print();
 	while(!solution.empty()){
 		usleep(500000);
-		board->move(solution.top());
+		board->move(solution.back());
 		cout << "solving..\n";
 		board->print();
-		solution.pop();
+		solution.pop_back();
 	}
-
+	cout << "Runtime: " << time << " seconds." << endl;
+	cout << "Checked: " << nodes << " nodes." << endl;
+	cout << "Moves: " << moves << " moves." << endl;
 }
 
 int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2){
@@ -61,7 +72,7 @@ int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int
 }
 
 
-int Solver::generateNodes(Node* current, queue<Node*> &openList, deque<Node*> &closedList){
+int Solver::generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList){
 	Node *temp;
 	for(int i = 0; i < 4; i++){
 		temp = new Node(current,current->state,i);
@@ -79,7 +90,7 @@ int Solver::generateNodes(Node* current, queue<Node*> &openList, deque<Node*> &c
     	}
 
     	if(unique == true){
-    		openList.push(temp);
+    		openList.push_back(temp);
     	} else {
     		delete temp;
     	}
