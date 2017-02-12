@@ -8,6 +8,10 @@
 
 using namespace std;
 
+
+/**
+ * @brief      Class for board.
+ */
 class Board 
 {
 	vector<vector<int>> goalState;
@@ -18,13 +22,13 @@ class Board
 
 public:
 	Board(int size = 3);
-	int move(int direction);
-	int moveUp();
-	int moveLeft();
-	int moveDown();
-	int moveRight();
-	int scramble();
-	int print();
+	void move(int direction);
+	void moveUp();
+	void moveLeft();
+	void moveDown();
+	void moveRight();
+	void scramble(int n);
+	void print();
 	vector<vector<int>> copyState();
 	int puzzleSize();
 	vector<vector<int>> getGoalState();

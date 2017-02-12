@@ -1,11 +1,12 @@
 #include "solver.h"
 
-Solver::Solver(){
 
-}
-
-
-int Solver::solve(Board* board){
+/**
+ * @brief      Main solver function that handles the Breadth first search
+ *
+ * @param      board  The board that is to be solved
+ */
+void Solver::solve(Board* board){
 
 	deque<Node*> openList;
 	deque<Node*> closedList;
@@ -56,7 +57,16 @@ int Solver::solve(Board* board){
 	cout << "Moves: " << moves << " moves." << endl;
 }
 
-int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2){
+/**
+ * @brief      Compares the contents of two 2D vectors.
+ *
+ * @param[in]  s1    vector 1
+ * @param[in]  s2    vector 2
+ *
+ * @return     Returns true if the vectors are the same and false if they are
+ *             different.
+ */
+bool Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2){
 	if(s1.size() != s2.size() || s1[0].size() != s2[0].size()){
 		return false;
 	}
@@ -73,7 +83,15 @@ int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int
 }
 
 
-int Solver::generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList){
+/**
+ * @brief      Generates all of the possible neighboring states for the current
+ *             state, not including any states that are on the closed list.
+ *
+ * @param      current     The current state
+ * @param      openList    The open list
+ * @param      closedList  The closed list
+ */
+void Solver::generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList){
 	Node *temp;
 	for(int i = 0; i < 4; i++){
 		temp = new Node(current,current->state,i);
@@ -98,7 +116,14 @@ int Solver::generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &c
 	}
 }
 
-int Solver::moveState(vector<vector<int>> &state, int direction){
+/**
+ * @brief      Applies a single "move" to the state that is passed into it. This
+ *             function is used in the generateNodes
+ *
+ * @param      state      The state
+ * @param[in]  direction  The direction
+ */
+void Solver::moveState(vector<vector<int>> &state, int direction){
 
 	int emptyX = 0;
 	int emptyY = 0;

@@ -1,5 +1,11 @@
 #include "board.h"
 
+/**
+ * @brief      Constructs the board and initializes the current state and the
+ *             goal state.
+ *
+ * @param[in]  size  The preferred size of the board.
+ */
 Board::Board(int size) {
 
 	PUZZLE_SIZE = size;
@@ -21,24 +27,42 @@ Board::Board(int size) {
 	}
 }
 
-
-int Board::moveUp(){
+/**
+ * @brief      Wrapper function of move() with the UP input.
+ */
+void Board::moveUp(){
 	this->move(0);
 }
 
-int Board::moveLeft(){
+/**
+ * @brief      Wrapper function of move() with the LEFT input.
+ */
+void Board::moveLeft(){
 	this->move(1);
 }
 
-int Board::moveDown(){
+/**
+ * @brief      Wrapper function of move() with the DOWN input.
+ */
+void Board::moveDown(){
 	this->move(2);
 }
-int Board::moveRight(){
+
+/**
+ * @brief      Wrapper function of move() with the UP input.
+ */
+void Board::moveRight(){
 	this->move(3);
 }
 
 
-int Board::move(int direction){
+/**
+ * @brief      Applies a move to currState based upon direction.
+ *
+ * @param[in]  direction  The direction of the move (0 : UP, 1 : LEFT, 2 : DOWN,
+ *                        3 : RIGHT)
+ */
+void Board::move(int direction){
 
 	int emptyX = 0;
 	int emptyY = 0;
@@ -86,12 +110,17 @@ int Board::move(int direction){
 }
 
 
-int Board::scramble()
+/**
+ * @brief      Applies a n number of random moves to currState.
+ *
+ * @param[in]  n     The number of random moves to be applied.
+ */
+void Board::scramble(int n)
 {
 	int randomNumber;
 	mt19937 randomGenerator(time(0));
 	uniform_int_distribution<int> roll(0,3);
-	for(int i = 0; i < 31; i++)
+	for(int i = 0; i < n; i++)
 	{
 		randomNumber = roll(randomGenerator);
 		switch(randomNumber){
@@ -114,7 +143,10 @@ int Board::scramble()
 }
 
 
-int Board::print()
+/**
+ * @brief      Prints out the currState to the terminal.
+ */
+void Board::print()
 {
 	for (int y = 0; y < currState.size(); y++)
 	{
@@ -148,6 +180,11 @@ vector<vector<int>> Board::copyState(){
 }
 
 
+/**
+ * @brief      Checks whether the puzzle is solved or not.
+ *
+ * @return     True if the puzzle is solved, False if not.
+ */
 bool Board::checkSuccess(){
 	for (int y = 0; y < PUZZLE_SIZE; y++)
 	{

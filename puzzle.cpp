@@ -1,6 +1,9 @@
 #include "puzzle.h"
 
-int Puzzle::start(){
+/**
+ * @brief      Function that hangles all of the IO
+ */
+void Puzzle::start(){
 	board = new Board(3);
 	cout << "Use the WASD keys to slide tiles surrounding the empty tile.\n";
 	cout << "Quit (q)   Randomize(1)   Solve(0)\n";
@@ -27,7 +30,7 @@ int Puzzle::start(){
 		else if(input == 'd')
 			board->moveRight();
 		else if(input == '1')
-			board->scramble();
+			board->scramble(100);
 		else if(input == '0')
 			solver->solve(board);
 	}
