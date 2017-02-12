@@ -83,7 +83,6 @@ int Board::move(int direction){
 		default:
 			break;
 	}
-	this->print();
 }
 
 
@@ -117,7 +116,6 @@ int Board::scramble()
 
 int Board::print()
 {
-	cout << "\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 	for (int y = 0; y < currState.size(); y++)
 	{
 		for(int x = 0; x< currState[y].size(); x++)
@@ -127,10 +125,11 @@ int Board::print()
 			else
 				cout << currState[y][x] << " ";
 		}
+		if(this->checkSuccess())
+			cout << "!!VICTORY!!";
 		cout << endl;
+
 	}
-	if(this->checkSuccess())
-		cout << "!!VICTORY!!\n";
 }
 
 

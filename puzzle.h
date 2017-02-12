@@ -2,9 +2,6 @@
 #define PUZZLE_H
 
 #include <iostream>
-#include <stdio.h>
-#include <random>
-#include <ctime>
 #include "board.h"
 #include "solver.h"
 
@@ -15,8 +12,6 @@ class Puzzle
 	Board *board;
 
 public:
-	Puzzle();
-	~Puzzle();
 	int start();
 
 };
