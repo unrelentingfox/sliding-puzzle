@@ -19,7 +19,6 @@ int Solver::solve(Board* board){
 
 	int nodes;
 	clock_t before = clock();
-	cout << "Finding solution...\n";
 	for(nodes = 0; success == false; nodes++){
 		generateNodes(openList.front(), openList, closedList);
 	 	if(compareStates(openList.front()->state, board->getGoalState())){
@@ -42,14 +41,16 @@ int Solver::solve(Board* board){
 		temp = temp->parent;
 	}
 
+	cout << "---------------------------SOLVER---------------------------\n";
 	board->print();
 	while(!solution.empty()){
 		usleep(500000);
 		board->move(solution.back());
-		cout << "solving..\n";
+		cout << "---------------------------SOLVER---------------------------\n";
 		board->print();
 		solution.pop_back();
 	}
+	cout << "------------------------SOLVER-STATS------------------------\n";
 	cout << "Runtime: " << time << " seconds." << endl;
 	cout << "Checked: " << nodes << " nodes." << endl;
 	cout << "Moves: " << moves << " moves." << endl;
