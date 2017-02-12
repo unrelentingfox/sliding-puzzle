@@ -4,29 +4,31 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <vector>
 
 using namespace std;
 
 class Board 
 {
+	vector<vector<int>> goalState;
+	vector<vector<int>> currState;
+
+	bool checkSuccess();
+	int PUZZLE_SIZE;
 
 public:
-	Board(int size=3);
-	~Board();
+	Board(int size = 3);
+	int move(int direction);
 	int moveUp();
 	int moveLeft();
 	int moveDown();
 	int moveRight();
 	int scramble();
 	int print();
-	int** copyState();
+	vector<vector<int>> copyState();
 	int puzzleSize();
-private:
-	int** currState;
-	int** startState;
-	int move(int direction);
-	bool checkSuccess();
-	int PUZZLE_SIZE;
+	vector<vector<int>> getGoalState();
+	vector<vector<int>> getCurrState();
 
 };
 
