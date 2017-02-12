@@ -8,7 +8,7 @@ Solver::Solver(){
 int Solver::solve(Board* board){
 
 	queue<Node*> openList;
-	list<Node*> closedList;
+	deque<Node*> closedList;
 	stack<int> solution;
 
 	bool success = false;
@@ -61,14 +61,14 @@ int Solver::compareStates(const vector<vector<int>> &s1, const vector<vector<int
 }
 
 
-int Solver::generateNodes(Node* current, queue<Node*> &openList, list<Node*> &closedList){
+int Solver::generateNodes(Node* current, queue<Node*> &openList, deque<Node*> &closedList){
 	Node *temp;
 	for(int i = 0; i < 4; i++){
 		temp = new Node(current,current->state,i);
 		moveState(temp->state, i);
 
 		bool unique = true;
-		for(std::list<Node*>::iterator iterator=closedList.begin(); iterator != closedList.end(); ++iterator)
+		for(std::deque<Node*>::iterator iterator=closedList.begin(); iterator != closedList.end(); ++iterator)
     	{
     		if(compareStates(current->state, temp->state)){
     			unique = false;

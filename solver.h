@@ -2,7 +2,6 @@
 #define SOLVER_H
 
 #include "board.h"
-#include <list>
 #include <queue>
 #include <stack>
 #include <unistd.h>
@@ -24,7 +23,7 @@ class Solver {
 		}
 	};
 
-	int generateNodes(Node* current, queue<Node*> &openList, list<Node*> &closedList);
+	int generateNodes(Node* current, queue<Node*> &openList, deque<Node*> &closedList);
 	int moveState(vector<vector<int>> &state, int direction);
 	int compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2);
 	int checkSuccess(Node* Node);
