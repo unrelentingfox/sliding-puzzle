@@ -25,7 +25,6 @@ void BFSSolver::solve(Board* board)
 		{
 			success = true;
 		}
-
 		else
 		{
 			// cout << "Nodes visited: " << nodes << endl;
@@ -117,7 +116,6 @@ void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*
 			{
 				unique = false;
 			}
-
 			else if (compareStates((*iterator)->state, temp->state))
 			{
 				unique = false;
@@ -128,7 +126,6 @@ void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*
 		{
 			openList.push_back(temp);
 		}
-
 		else
 		{
 			delete temp;
