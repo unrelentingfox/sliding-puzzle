@@ -14,8 +14,8 @@ using namespace std;
  */
 class Board 
 {
-	vector<vector<int>> goalState;
-	vector<vector<int>> currState;
+	vector<vector<int> > goalState;
+	vector<vector<int> > currState;
 
 	bool checkSuccess();
 	int PUZZLE_SIZE;
@@ -29,10 +29,10 @@ public:
 	void moveRight();
 	void scramble(int n);
 	void print();
-	vector<vector<int>> copyState();
+	vector<vector<int> > copyState();
 	int puzzleSize();
-	vector<vector<int>> getGoalState();
-	vector<vector<int>> getCurrState();
+	vector<vector<int> > getGoalState();
+	vector<vector<int> > getCurrState();
 
 };
 

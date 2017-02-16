@@ -165,8 +165,8 @@ void Board::print()
 }
 
 
-vector<vector<int>> Board::copyState(){
-	vector<vector<int>> copy;
+vector<vector<int> > Board::copyState(){
+	vector<vector<int> > copy;
 
 	copy.resize(PUZZLE_SIZE, vector<int>(PUZZLE_SIZE));
 
@@ -202,10 +202,10 @@ int Board::puzzleSize(){
 	return PUZZLE_SIZE;
 }
 
-vector<vector<int>> Board::getGoalState(){
+vector<vector<int> > Board::getGoalState(){
 	return goalState;
 }
 
-vector<vector<int>> Board::getCurrState(){
+vector<vector<int> > Board::getCurrState(){
 	return currState;
 }

@@ -9,7 +9,7 @@ void Puzzle::start(){
 	cout << "Quit (q)   Randomize(1)   Solve(0)\n";
 	board->print();
 	char input;
-	Solver *solver = new Solver;
+	BFSSolver *solver = new BFSSolver;
 
 	while(input != 'q'){
 		cout << "------------------------------------------------------------\n";

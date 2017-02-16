@@ -12,15 +12,15 @@ using namespace std;
 /**
  * @brief      Class for solver.
  */
-class Solver {
+class BFSSolver {
 
 	struct Node {
-		vector<vector<int>> state;
+		vector<vector<int> > state;
 		Node *parent;
 		int parentMove;
 
 		Node(){}
-		Node(Node* p,vector<vector<int>> s, int pm){
+		Node(Node* p,vector<vector<int> > s, int pm){
 			state = s;
 			parent = p;
 			parentMove = pm;
@@ -28,9 +28,9 @@ class Solver {
 	};
 
 	void generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList);
-	void moveState(vector<vector<int>> &state, int direction);
-	bool compareStates(const vector<vector<int>> &s1, const vector<vector<int>> &s2);
-	vector<vector<int>> copyState(vector<vector<int>> &state);
+	void moveState(vector<vector<int> > &state, int direction);
+	bool compareStates(const vector<vector<int> > &s1, const vector<vector<int> > &s2);
+	vector<vector<int> > copyState(vector<vector<int> > &state);
 
 public:
 	void solve(Board* board);
