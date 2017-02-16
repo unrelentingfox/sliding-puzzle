@@ -12,8 +12,7 @@ using namespace std;
 /**
  * @brief      Class for board.
  */
-class Board 
-{
+class Board {
 	vector<vector<int> > goalState;
 	vector<vector<int> > currState;
 

@@ -10,9 +10,8 @@ using namespace std;
 /**
  * @brief      Class for puzzle.
  */
-class Puzzle 
-{
-	Board *board;
+class Puzzle {
+	Board* board;
 
 public:
 	void start();

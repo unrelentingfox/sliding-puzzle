@@ -6,8 +6,7 @@
  *
  * @param      board  The board that is to be solved
  */
-void BFSSolver::solve(Board* board)
-{
+void BFSSolver::solve(Board* board) {
 	deque<Node*> openList;
 	deque<Node*> closedList;
 	deque<int> solution;
@@ -17,16 +16,13 @@ void BFSSolver::solve(Board* board)
 	int nodes;
 	clock_t before = clock();
 
-	for (nodes = 0; success == false; nodes++)
-	{
+	for (nodes = 0; success == false; nodes++) {
 		generateNodes(openList.front(), openList, closedList);
 
-		if (compareStates(openList.front()->state, board->getGoalState()))
-		{
+		if (compareStates(openList.front()->state, board->getGoalState())) {
 			success = true;
 		}
-		else
-		{
+		else {
 			// cout << "Nodes visited: " << nodes << endl;
 			closedList.push_back(openList.front());
 			openList.pop_front();
@@ -38,8 +34,7 @@ void BFSSolver::solve(Board* board)
 	Node* temp = openList.front();
 	int moves;
 
-	for (moves = 0; temp->parent != NULL; moves++)
-	{
+	for (moves = 0; temp->parent != NULL; moves++) {
 		solution.push_back(temp->parentMove);
 		temp = temp->parent;
 	}
@@ -47,8 +42,7 @@ void BFSSolver::solve(Board* board)
 	cout << "---------------------------SOLVER---------------------------\n";
 	board->print();
 
-	while (!solution.empty())
-	{
+	while (!solution.empty()) {
 		usleep(500000);
 		board->move(solution.back());
 		cout << "---------------------------SOLVER---------------------------\n";
@@ -71,17 +65,13 @@ void BFSSolver::solve(Board* board)
  * @return     Returns true if the vectors are the same and false if they are
  *             different.
  */
-bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2)
-{
-	if (s1.size() != s2.size() || s1[0].size() != s2[0].size())
-	{
+bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2) {
+	if (s1.size() != s2.size() || s1[0].size() != s2[0].size()) {
 		return false;
 	}
 
-	for (int y = 0; y < s1.size(); y++)
-	{
-		for (int x = 0; x < s1[y].size(); x++)
-		{
+	for (int y = 0; y < s1.size(); y++) {
+		for (int x = 0; x < s1[y].size(); x++) {
 			if (s1[y][x] != s2[y][x])
 			{ return false; }
 		}
@@ -99,35 +89,28 @@ bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vecto
  * @param      openList    The open list
  * @param      closedList  The closed list
  */
-void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*>& closedList)
-{
+void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*>& closedList) {
 	Node* temp;
 
-	for (int i = 0; i < 4; i++)
-	{
+	for (int i = 0; i < 4; i++) {
 		temp = new Node(current, current->state, i);
 		moveState(temp->state, i);
 		bool unique = true;
 
 		for (std::deque<Node*>::iterator iterator = closedList.begin(); iterator != closedList.end();
-		        ++iterator)
-		{
-			if (compareStates(current->state, temp->state))
-			{
+		        ++iterator) {
+			if (compareStates(current->state, temp->state)) {
 				unique = false;
 			}
-			else if (compareStates((*iterator)->state, temp->state))
-			{
+			else if (compareStates((*iterator)->state, temp->state)) {
 				unique = false;
 			}
 		}
 
-		if (unique == true)
-		{
+		if (unique == true) {
 			openList.push_back(temp);
 		}
-		else
-		{
+		else {
 			delete temp;
 		}
 	}
@@ -140,29 +123,23 @@ void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*
  * @param      state      The state
  * @param[in]  direction  The direction
  */
-void BFSSolver::moveState(vector<vector<int> >& state, int direction)
-{
+void BFSSolver::moveState(vector<vector<int> >& state, int direction) {
 	int emptyX = 0;
 	int emptyY = 0;
 
 	//find the empty puzzle peice
-	for (int y = 0; y < state.size(); y++)
-	{
-		for (int x = 0; x < state[y].size(); x++)
-		{
-			if (state[y][x] == 0)
-			{
+	for (int y = 0; y < state.size(); y++) {
+		for (int x = 0; x < state[y].size(); x++) {
+			if (state[y][x] == 0) {
 				emptyY = y;
 				emptyX = x;
 			}
 		}
 	}
 
-	switch (direction)
-	{
+	switch (direction) {
 	case 0:
-		if (emptyY < state.size() - 1)
-		{
+		if (emptyY < state.size() - 1) {
 			state[emptyY][emptyX] = state[emptyY + 1][emptyX];
 			state[emptyY + 1][emptyX] = 0;
 		}
@@ -170,8 +147,7 @@ void BFSSolver::moveState(vector<vector<int> >& state, int direction)
 		break;
 
 	case 1:
-		if (emptyX < state[0].size() - 1)
-		{
+		if (emptyX < state[0].size() - 1) {
 			state[emptyY][emptyX] = state[emptyY][emptyX + 1];
 			state[emptyY][emptyX + 1] = 0;
 		}
@@ -179,8 +155,7 @@ void BFSSolver::moveState(vector<vector<int> >& state, int direction)
 		break;
 
 	case 2:
-		if (emptyY > 0)
-		{
+		if (emptyY > 0) {
 			state[emptyY][emptyX] = state[emptyY - 1][emptyX];
 			state[emptyY - 1][emptyX] = 0;
 		}
@@ -188,8 +163,7 @@ void BFSSolver::moveState(vector<vector<int> >& state, int direction)
 		break;
 
 	case 3:
-		if (emptyX > 0)
-		{
+		if (emptyX > 0) {
 			state[emptyY][emptyX] = state[emptyY][emptyX - 1];
 			state[emptyY][emptyX - 1] = 0;
 		}

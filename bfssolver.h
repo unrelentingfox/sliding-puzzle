@@ -16,21 +16,21 @@ class BFSSolver {
 
 	struct Node {
 		vector<vector<int> > state;
-		Node *parent;
+		Node* parent;
 		int parentMove;
 
-		Node(){}
-		Node(Node* p,vector<vector<int> > s, int pm){
+		Node() {}
+		Node(Node* p, vector<vector<int> > s, int pm) {
 			state = s;
 			parent = p;
 			parentMove = pm;
 		}
 	};
 
-	void generateNodes(Node* current, deque<Node*> &openList, deque<Node*> &closedList);
-	void moveState(vector<vector<int> > &state, int direction);
-	bool compareStates(const vector<vector<int> > &s1, const vector<vector<int> > &s2);
-	vector<vector<int> > copyState(vector<vector<int> > &state);
+	void generateNodes(Node* current, deque<Node*>& openList, deque<Node*>& closedList);
+	void moveState(vector<vector<int> >& state, int direction);
+	bool compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2);
+	vector<vector<int> > copyState(vector<vector<int> >& state);
 
 public:
 	void solve(Board* board);
