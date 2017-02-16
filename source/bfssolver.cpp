@@ -8,7 +8,7 @@
  */
 void BFSSolver::solve(Board* board) {
 	deque<Node*> openList;
-	deque<Node*> closedList;
+	unordered_set<int> closedList;
 	deque<int> solution;
 	bool success = false;
 	Node* start = new Node(NULL, board->getCurrState(), 4);
@@ -23,8 +23,8 @@ void BFSSolver::solve(Board* board) {
 			success = true;
 		}
 		else {
-			// cout << "Nodes visited: " << nodes << endl;
-			closedList.push_back(openList.front());
+			//cout << "Nodes visited: " << nodes << endl;
+			closedList.insert(hashFunction(openList.front()->state));
 			openList.pop_front();
 		}
 	}
@@ -55,6 +55,27 @@ void BFSSolver::solve(Board* board) {
 	cout << "Checked: " << nodes << " nodes." << endl;
 	cout << "Moves: " << moves << " moves." << endl;
 }
+
+
+/**
+ * @brief      Takes the vector and converts it to an int based upon the tile
+ *             positions
+ *
+ * @return     the int representation of the state
+ */
+int BFSSolver::hashFunction(vector<vector<int> > matrix) {
+	int n = matrix.size();
+	int returnVal;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n;  j++) {
+			returnVal = 10 * returnVal + matrix[i][j];
+		}
+	}
+
+	return returnVal;
+}
+
 
 /**
  * @brief      Compares the contents of two 2D vectors.
@@ -89,7 +110,7 @@ bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vecto
  * @param      openList    The open list
  * @param      closedList  The closed list
  */
-void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*>& closedList) {
+void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, unordered_set<int>& closedList) {
 	Node* temp;
 
 	for (int i = 0; i < 4; i++) {
@@ -97,14 +118,8 @@ void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, deque<Node*
 		moveState(temp->state, i);
 		bool unique = true;
 
-		for (std::deque<Node*>::iterator iterator = closedList.begin(); iterator != closedList.end();
-		        ++iterator) {
-			if (compareStates(current->state, temp->state)) {
-				unique = false;
-			}
-			else if (compareStates((*iterator)->state, temp->state)) {
-				unique = false;
-			}
+		if (closedList.find(hashFunction(temp->state)) != closedList.end()) {
+			unique = false;
 		}
 
 		if (unique == true) {

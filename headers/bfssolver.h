@@ -3,7 +3,7 @@
 
 #include "board.h"
 #include <deque>
-#include <stack>
+#include <unordered_set>
 #include <unistd.h>
 #include <time.h>
 
@@ -27,7 +27,8 @@ class BFSSolver {
 		}
 	};
 
-	void generateNodes(Node* current, deque<Node*>& openList, deque<Node*>& closedList);
+	void generateNodes(Node* current, deque<Node*>& openList, unordered_set<int>& closedList);
+	int hashFunction(vector<vector<int> >);
 	void moveState(vector<vector<int> >& state, int direction);
 	bool compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2);
 	vector<vector<int> > copyState(vector<vector<int> >& state);
