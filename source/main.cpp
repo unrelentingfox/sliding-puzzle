@@ -2,10 +2,8 @@
 
 using namespace std;
 
-main(){
+main() {
 	Puzzle* puzzle = new Puzzle();
-
 	puzzle->start();
-
 	return 0;
 }
