@@ -243,7 +243,7 @@ void Solver::generateNodesAStar(Node* current, list<Node*>& openList, unordered_
 
 			// usleep(50000);
 			for (it = openList.begin(); inserted == false && it != openList.end(); it++) {
-				if ((temp->totalMoves + temp->estimateToGoal) > ((*it)->totalMoves + (*it)->estimateToGoal)) {
+				if ((temp->totalMoves + temp->estimateToGoal) < ((*it)->totalMoves + (*it)->estimateToGoal)) {
 					cout << (temp->estimateToGoal + temp->totalMoves) << "is less than" << ((*it)->estimateToGoal + (*it)->totalMoves) << endl;
 					openList.insert(it, temp);
 					inserted = true;
