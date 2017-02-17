@@ -1,5 +1,5 @@
-#ifndef SOLVER_H
-#define SOLVER_H
+#ifndef BFSSOLVER_H
+#define BFSSOLVER_H
 
 #include "board.h"
 #include <deque>
@@ -12,8 +12,9 @@ using namespace std;
 /**
  * @brief      Class for solver.
  */
-class BFSSolver {
+class Solver {
 
+protected:
 	struct Node {
 		vector<vector<int> > state;
 		Node* parent;

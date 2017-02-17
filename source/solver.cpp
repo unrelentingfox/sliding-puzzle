@@ -1,4 +1,4 @@
-#include "bfssolver.h"
+#include "solver.h"
 
 
 /**
@@ -6,7 +6,7 @@
  *
  * @param      board  The board that is to be solved
  */
-void BFSSolver::solve(Board* board) {
+void Solver::solve(Board* board) {
 	deque<Node*> openList;
 	unordered_set<long> closedList;
 	deque<int> solution;
@@ -16,6 +16,7 @@ void BFSSolver::solve(Board* board) {
 	int nodes;
 	clock_t before = clock();
 
+
 	for (nodes = 0; success == false; nodes++) {
 		generateNodes(openList.front(), openList, closedList);
 
@@ -23,7 +24,7 @@ void BFSSolver::solve(Board* board) {
 			success = true;
 		}
 		else {
-			//cout << "Nodes visited: " << nodes << endl;
+			// cout << "Nodes visited: " << nodes << endl;
 			closedList.insert(hashFunction(openList.front()->state));
 			openList.pop_front();
 		}
@@ -63,7 +64,7 @@ void BFSSolver::solve(Board* board) {
  *
  * @return     the int representation of the state
  */
-long BFSSolver::hashFunction(vector<vector<int> > matrix) {
+long Solver::hashFunction(vector<vector<int> > matrix) {
 	int n = matrix.size();
 	long returnVal = 0;
 	long p;
@@ -94,7 +95,7 @@ long BFSSolver::hashFunction(vector<vector<int> > matrix) {
  * @return     Returns true if the vectors are the same and false if they are
  *             different.
  */
-bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2) {
+bool Solver::compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2) {
 	if (s1.size() != s2.size() || s1[0].size() != s2[0].size()) {
 		return false;
 	}
@@ -118,7 +119,7 @@ bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vecto
  * @param      openList    The open list
  * @param      closedList  The closed list
  */
-void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, unordered_set<long>& closedList) {
+void Solver::generateNodes(Node* current, deque<Node*>& openList, unordered_set<long>& closedList) {
 	Node* temp;
 
 	for (int i = 0; i < 4; i++) {
@@ -146,7 +147,7 @@ void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, unordered_s
  * @param      state      The state
  * @param[in]  direction  The direction
  */
-void BFSSolver::moveState(vector<vector<int> >& state, int direction) {
+void Solver::moveState(vector<vector<int> >& state, int direction) {
 	int emptyX = 0;
 	int emptyY = 0;
 
