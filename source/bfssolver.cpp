@@ -8,7 +8,7 @@
  */
 void BFSSolver::solve(Board* board) {
 	deque<Node*> openList;
-	unordered_set<int> closedList;
+	unordered_set<long> closedList;
 	deque<int> solution;
 	bool success = false;
 	Node* start = new Node(NULL, board->getCurrState(), 4);
@@ -63,16 +63,24 @@ void BFSSolver::solve(Board* board) {
  *
  * @return     the int representation of the state
  */
-int BFSSolver::hashFunction(vector<vector<int> > matrix) {
+long BFSSolver::hashFunction(vector<vector<int> > matrix) {
 	int n = matrix.size();
-	int returnVal;
+	long returnVal = 0;
+	long p;
 
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n;  j++) {
-			returnVal = 10 * returnVal + matrix[i][j];
+			p = 10;
+
+			while (matrix[i][j] >= p)
+				p *= 10;
+
+			returnVal *= p;
+			returnVal += matrix[i][j];
 		}
 	}
 
+	// cout << returnVal << endl;
 	return returnVal;
 }
 
@@ -94,7 +102,7 @@ bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vecto
 	for (int y = 0; y < s1.size(); y++) {
 		for (int x = 0; x < s1[y].size(); x++) {
 			if (s1[y][x] != s2[y][x])
-			{ return false; }
+				return false;
 		}
 	}
 
@@ -110,7 +118,7 @@ bool BFSSolver::compareStates(const vector<vector<int> >& s1, const vector<vecto
  * @param      openList    The open list
  * @param      closedList  The closed list
  */
-void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, unordered_set<int>& closedList) {
+void BFSSolver::generateNodes(Node* current, deque<Node*>& openList, unordered_set<long>& closedList) {
 	Node* temp;
 
 	for (int i = 0; i < 4; i++) {
