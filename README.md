@@ -19,7 +19,7 @@ navagate to the folder that you cloned the project in and type the command:
 
 `make`
 
-Then to run the Program type:
+Then to run the program type:
 
 `bin/runner`
 
@@ -30,3 +30,6 @@ Then to run the Program type:
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
+
+## Licence 
+Apache 2.0
