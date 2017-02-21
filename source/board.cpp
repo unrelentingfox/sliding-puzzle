@@ -176,19 +176,21 @@ void Board::scramble(int n) {
  * @brief      Prints out the currState to the terminal.
  */
 void Board::print() {
+	cout << endl;
 	for (int y = 0; y < currState.size(); y++) {
 		for (int x = 0; x < currState[y].size(); x++) {
 			if (currState[y][x] == 0)
-				cout << "  ";
+				cout << "    ";
 			else
-				cout << currState[y][x] << " ";
+				cout << "  " << currState[y][x] << " ";
 		}
 
 		if (this->checkSuccess())
-			cout << "!!VICTORY!!";
+			cout << "                                    !! SOLVED !!";
 
-		cout << endl;
+		cout << endl << endl;
 	}
+	cout << endl;
 }
 
 

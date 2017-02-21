@@ -13,20 +13,20 @@ void Puzzle::start() {
 	bool printMoves = true;
 
 	while (input != 'q') {
-		cout << "-------------------------------------------------------------#\n";
-		cout << "Use the WASD keys to slide tiles surrounding the empty tile. #\n";
-		cout << "                                                             #\n";
-		cout << "Quit (q)  Shuffle(1)    BFS1(5) BFS2(6) DFS(7) A*1(8) A*2(9) #\n";
-		cout << "-------------------------------------------------------------#\n";
-		cout << "Print Moves: ";
+		cout << "-------------------------------------------------------------=\n";
+		cout << "Use the WASD keys to slide tiles surrounding the empty tile. |\n";
+		cout << "                                                             |\n";
+		cout << "Quit (q)  Shuffle(1)    BFS1(5) BFS2(6) DFS(7) A*1(8) A*2(9) |\n";
+		cout << "-------------------------------------------------------------|\n";
+		cout << "Print Moves? ";
 
 		if (printMoves)
 			cout << "<On >";
 		else
 			cout << "<Off>";
 
-		cout << " Toggle(p) |  Solve with all algorithms(0) #\n";
-		cout << "-------------------------------------------------------------#\n";
+		cout << " Toggle(p) |  Solve with ALL algorithms(0) |\n";
+		cout << "-------------------------------------------------------------=\n";
 		board->print();
 		cout << "------------------------------------------------------------->>\n";
 		cout << "Input: ";
