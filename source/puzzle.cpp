@@ -9,12 +9,12 @@ void Puzzle::start() {
 	cout << "Quit (q)   Randomize(1)   Solve(0)\n";
 	board->print();
 	char input;
-	BFSSolver* solver = new BFSSolver;
+	Solver* solver = new Solver;
 
 	while (input != 'q') {
 		cout << "------------------------------------------------------------\n";
 		cout << "Use the WASD keys to slide tiles surrounding the empty tile.\n";
-		cout << "Quit (q)   Randomize(1)   Solve(0)\n";
+		cout << "Quit (q)  Shuffle(1)                 DFS(8)   BFS(9)   A*(0)   \n";
 		cout << "------------------------------------------------------------\n";
 		board->print();
 		cout << "------------------------------------------------------------\n";
@@ -31,7 +31,11 @@ void Puzzle::start() {
 			board->moveRight();
 		else if (input == '1')
 			board->scramble(100);
+		else if (input == '8')
+			solver->DFSSolve(board);
+		else if (input == '9')
+			solver->BFSSolve(board);
 		else if (input == '0')
-			solver->solve(board);
+			solver->AStarSolve(board);
 	}
 }

@@ -1,7 +1,6 @@
-#
-# TODO: Move `libmongoclient.a` to /usr/local/lib so this can work on production servers
-#
- 
+# Template thanks to Hilton Lipschitz
+# http://hiltmon.com/blog/2013/07/03/a-simple-c-plus-plus-project-structure/
+
 CC := g++ # This is the main compiler
 # CC := clang --analyze # and comment out the linker last line for sanity
 SRCDIR := source

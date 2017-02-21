@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "board.h"
-#include "bfssolver.h"
+#include "solver.h"
 
 using namespace std;
 
