@@ -1,5 +1,26 @@
 #include "solver.h"
 
+void Solver::BFSSolve(Board* board, bool printMoves) {
+	Solve(board, 1, printMoves);
+}
+
+void Solver::BFSClosedListSolve(Board* board, bool printMoves) {
+	Solve(board, 2, printMoves);
+}
+
+void Solver::DFSSolve(Board* board, bool printMoves) {
+	//depth first search traverses too many nodes to print.
+	Solve(board, 3, false);
+}
+
+void Solver::AStarSolveManhattanDist(Board* board, bool printMoves) {
+	Solve(board, 4, printMoves);
+}
+
+void Solver::AStarSolveStraightLineDist(Board* board, bool printMoves) {
+	Solve(board, 5, printMoves);
+}
+
 
 /**
  * @brief      Main solver function that handles the Breadth first search
@@ -8,38 +29,47 @@
  * @param      board  The board that is to be solved
  * @param[in]  type   The type of algorithm to use (DFS, BFS, ASTAR)
  */
-void Solver::Solve(Board* board, string type) {
+void Solver::Solve(Board* board, int type, bool printMoves) {
 	list<Node*> openList;
 	unordered_set<long> closedList;
 	bool success = false;
 	Node* current = new Node();
 	current->state = board->getCurrState();
-	current->estimateToGoal = manhattanDistance(current->state, board->getGoalState());
+
+	//If we are doing A* then calculate the estimate.
+	if (type == 4)
+		current->estimateToGoal = manhattanDistance(current->state, board->getGoalState());
+	else if (type == 5)
+		current->estimateToGoal = straightLineDistance(current->state, board->getGoalState());
+
 	openList.push_back(current);
 	int nodes;
 	clock_t before = clock();
 
-	for (nodes = 0; success == false; nodes++) {
+	for (nodes = 0; success == false && nodes < 3000000; nodes++) {
 		//Pop the current state off of the openlist.
 		current = openList.front();
 		openList.pop_front();
 
-		//Check if OpenList.front is goal state
+		//Check if OpenList.front is goal state.
 		if (compareStates(current->state, board->getGoalState())) {
 			success = true;
 		}
 
-		//Generate child nodes
+		//Generate child nodes.
 		if (success == false) {
 			generateNodes(current, openList, closedList, board, type);
-			// cout << "Nodes visited: " << nodes << endl;
-			closedList.insert(hashFunction(current->state));
+
+			//Add current node to closed list if the algorithm uses a closed list
+			//DFS1 does not use the closed list (1)
+			if (type != 1)
+				closedList.insert(hashFunction(current->state));
 		}
 	}
 
 	clock_t after = clock();
 	float time = ((float)after - (float)before) / CLOCKS_PER_SEC;
-	PrintResult(current, time, nodes, board, type);
+	PrintResult(current, time, nodes, board, type, printMoves);
 }
 
 
@@ -51,36 +81,48 @@ void Solver::Solve(Board* board, string type) {
  * @param      openList    The open list
  * @param      closedList  The closed list
  */
-void Solver::generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList, Board* board, string type) {
+void Solver::generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList, Board* board, int type) {
 	Node* child;
 	long childKey;
 
 	for (int i = 0; i < 4; i++) {
 		child = new Node(current);
 		moveState(child, i);
-		child->estimateToGoal = manhattanDistance(child->state, board->getGoalState());
+
+		//If we are doing A* then calculate the estimate.
+		if (type == 4)
+			child->estimateToGoal = manhattanDistance(child->state, board->getGoalState());
+		else if (type == 5)
+			child->estimateToGoal = straightLineDistance(child->state, board->getGoalState());
+
 		childKey = hashFunction(child->state);
 		bool unique = true;
 
-		if (compareStates(current->state, child->state)
-		        || closedList.find(childKey) != closedList.end()) {
+		//Check if child is actually different than current
+		if (compareStates(current->state, child->state)) {
 			unique = false;
 		}
 
+		//If the algorithm uses a closed list then check to make sure the child is not in the closed list.
+		//The BFS algorithm (1) does not use the closed list.
+		if (type != 1 && closedList.find(childKey) != closedList.end()) {
+			unique = false;
+		}
+
+		//Add the child to the open List (varies with each algorithm).
 		if (unique == true) {
-			if (type == "DFS") {
-				openList.push_front(child);
-			}
-			else if (type == "BFS") {
+			if (type == 1 || type == 2) { //BFS algorithm
 				openList.push_back(child);
 			}
-			else if (type == "ASTAR") {
+			else if (type == 3) { //DFS algorthm
+				openList.push_front(child);
+			}
+			else if (type == 4 || type == 5) { //A* algorithm
 				bool inserted = false;
 				list<Node*>::iterator it;
 
-				// usleep(50000);
 				for (it = openList.begin(); inserted == false && it != openList.end(); it++) {
-					if ((child->totalMoves + child->estimateToGoal) < ((*it)->totalMoves + (*it)->estimateToGoal)) {
+					if ((child->totalMoves + child->estimateToGoal) <= ((*it)->totalMoves + (*it)->estimateToGoal)) {
 						openList.insert(it, child);
 						inserted = true;
 					}
@@ -151,7 +193,7 @@ bool Solver::compareStates(const vector<vector<int> >& s1, const vector<vector<i
 }
 
 
-void Solver::PrintResult(Node* current, float time, int nodes, Board* board, string type) {
+void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int type, bool printMoves) {
 	list<int> solution;
 	int moves;
 
@@ -160,35 +202,50 @@ void Solver::PrintResult(Node* current, float time, int nodes, Board* board, str
 		current = current->parent;
 	}
 
-	cout << "---------------------------SOLVER---------------------------\n";
-	board->print();
-
-	while (!solution.empty()) {
-		if (type != "DFS") {
-			usleep(500000);
-		}
-
-		board->move(solution.back());
-
-		if (type != "DFS") {
-			cout << "---------------------------SOLVER---------------------------\n";
-			board->print();
-		}
-
-		solution.pop_back();
+	if (printMoves) {
+		cout << "---------------------------SOLVER----------------------------*\n";
+		board->print();
 	}
 
-	cout << "------------------------SOLVER-STATS------------------------\n";
-	cout << "Algorithm Type: ";
+	while (!solution.empty()) {
+		board->move(solution.back());
+		solution.pop_back();
 
-	if (type == "ASTAR")
-		cout << "A*" << endl;
-	else
-		cout << type << endl;
+		if (printMoves) {
+			cout << "---------------------------SOLVER----------------------------*\n";
+			board->print();
+			usleep(500000);
+		}
+	}
 
-	cout << "Runtime: " << time << " seconds." << endl;
-	cout << "Checked: " << nodes << " nodes." << endl;
-	cout << "Moves: " << moves << " moves." << endl;
+	cout << "------------------------SOLVER-STATS-------------------------*\n";
+	cout << "Algorithm: ";
+
+	switch (type) {
+	case 1:
+		cout << "Breadth First Search (no closed list)" << endl;
+		break;
+
+	case 2:
+		cout << "Breadth First Search (with closed list)" << endl;
+		break;
+
+	case 3:
+		cout << "Depth First Search (with closed list)" << endl;
+		break;
+
+	case 4:
+		cout << "A* (Manhattan Distance)" << endl;
+		break;
+
+	case 5:
+		cout << "A* (Straight Line Distance)" << endl;
+		break;
+	}
+
+	cout << "  Runtime: " << time << " seconds." << endl;
+	cout << "  Checked: " << nodes << " nodes." << endl;
+	cout << " Executed: " << moves << " moves." << endl;
 }
 
 
@@ -199,12 +256,11 @@ void Solver::PrintResult(Node* current, float time, int nodes, Board* board, str
  *
  * @return     { description_of_the_return_value }
  */
-int Solver::manhattanDistance(vector<vector<int> > state, vector<vector<int> > goal) {
+float Solver::manhattanDistance(vector<vector<int> > state, vector<vector<int> > goal) {
 	//[tileNumber].first == x coordinate, [tileNumber].second == y coordinate
 	vector<pair<int, int>> stateCoords(state.size()*state[0].size());
 	vector<pair<int, int>> goalCoords(goal.size()*goal[0].size());
-	int totalDistance = 0;
-	int* coordinate;
+	float totalDistance = 0;
 
 	//Iterate through each tile of the goal state and record the coordinates of each tile
 	for (int y = 0; y < goal.size(); y++) {
@@ -225,6 +281,37 @@ int Solver::manhattanDistance(vector<vector<int> > state, vector<vector<int> > g
 	//Iterate through all the tiles and find the Manhattan distance between them
 	for (int i = 0; i < goalCoords.size() && i < stateCoords.size(); i++) {
 		totalDistance += abs(stateCoords[i].first - goalCoords[i].first) + abs(stateCoords[i].second - goalCoords[i].second);
+	}
+
+	return totalDistance;
+}
+
+
+float Solver::straightLineDistance(vector<vector<int> > state, vector<vector<int> > goal) {
+	//[tileNumber].first == x coordinate, [tileNumber].second == y coordinate
+	vector<pair<int, int>> stateCoords(state.size()*state[0].size());
+	vector<pair<int, int>> goalCoords(goal.size()*goal[0].size());
+	float totalDistance = 0;
+
+	//Iterate through each tile of the goal state and record the coordinates of each tile
+	for (int y = 0; y < goal.size(); y++) {
+		for (int x = 0; x < goal[0].size(); x++) {
+			goalCoords[goal[y][x]].first = x;
+			goalCoords[goal[y][x]].second = y;
+		}
+	}
+
+	//Iterate through each tile of the current state and record the coordingates of each tile
+	for (int y = 0; y < state.size(); y++) {
+		for (int x = 0; x < state[0].size(); x++) {
+			stateCoords[state[y][x]].first = x;
+			stateCoords[state[y][x]].second = y;
+		}
+	}
+
+	//Iterate through all the tiles and find the Manhattan distance between them
+	for (int i = 0; i < goalCoords.size() && i < stateCoords.size(); i++) {
+		totalDistance += sqrt(pow(stateCoords[i].first - goalCoords[i].first, 2) + pow(stateCoords[i].second - goalCoords[i].second, 2));
 	}
 
 	return totalDistance;

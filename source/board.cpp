@@ -25,6 +25,28 @@ Board::Board(int size) {
 	}
 }
 
+
+
+/**
+ * @brief      Reconfigures the board based upon inputs.
+ *
+ * @param[in]  curr  The desired current state, must be an n*n matrix the same size as goal.
+ * @param[in]  goal  The desired goal state, must be an n*n matrix the same size as curr.
+ */
+int Board::manualSet(vector<vector<int> > curr, vector<vector<int> > goal) {
+	if (curr.size() >= 3
+	        && curr.size() == goal.size()
+	        && curr.size() == curr[0].size()
+	        && goal.size() == goal[0].size()) {
+		currState = curr;
+		goalState = goal;
+		PUZZLE_SIZE = currState.size();
+		return 1;
+	}
+
+	return 0;
+}
+
 /**
  * @brief      Wrapper function of move() with the UP input.
  */
@@ -166,18 +188,6 @@ void Board::print() {
 			cout << "!!VICTORY!!";
 
 		cout << endl;
-	}
-}
-
-
-vector<vector<int> > Board::copyState() {
-	vector<vector<int> > copy;
-	copy.resize(PUZZLE_SIZE, vector<int>(PUZZLE_SIZE));
-
-	for (int y = 0; y < currState.size(); y++) {
-		for (int x = 0; x < currState[y].size(); x++) {
-			copy[y][x] = currState[y][x];
-		}
 	}
 }
 

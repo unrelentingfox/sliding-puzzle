@@ -20,7 +20,9 @@ class Board {
 	int PUZZLE_SIZE;
 
 public:
+
 	Board(int size = 3);
+	int manualSet(vector<vector<int> > curr, vector<vector<int> > goal);
 	void move(int direction);
 	void moveUp();
 	void moveLeft();
@@ -28,7 +30,6 @@ public:
 	void moveRight();
 	void scramble(int n);
 	void print();
-	vector<vector<int> > copyState();
 	int puzzleSize();
 	vector<vector<int> > getGoalState();
 	vector<vector<int> > getCurrState();
