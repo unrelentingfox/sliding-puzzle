@@ -1,3 +1,6 @@
+/**
+ * solver.h
+ */
 #ifndef BFSSOLVER_H
 #define BFSSOLVER_H
 

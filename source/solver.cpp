@@ -1,3 +1,6 @@
+/**
+ * solver.cpp
+ */
 #include "solver.h"
 
 void Solver::BFSSolve(Board* board, bool printMoves) {
@@ -193,6 +196,23 @@ bool Solver::compareStates(const vector<vector<int> >& s1, const vector<vector<i
 }
 
 
+/**
+ * @brief      Takes the Board object and applies all of the moves that the
+ *             algorithm suggests and prints them out if the printMoves flag is
+ *             set. Also prints out statistics on how the algorithm performed.
+ *
+ * @param      current     The Node the pointer to the goal state and all of the
+ *                         moves that the algorithm made to reach the goal
+ *                         state.
+ * @param[in]  time        The time in seconds that the algorithm took to
+ *                         compute the solution.
+ * @param[in]  nodes       The number of nodes that the algorithm traversed
+ * @param      board       The board the board that the moves should be applied
+ *                         to.
+ * @param[in]  type        The type of algorithm (1,2,3,4,5).
+ * @param[in]  printMoves  The flag that determines whether or not each move
+ *                         will be individually printed out or not.
+ */
 void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int type, bool printMoves) {
 	list<int> solution;
 	int moves;
@@ -250,11 +270,13 @@ void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int
 
 
 /**
- * @brief      { function_description }
+ * @brief      Generates the total straight line distance between each tile in
+ *             the goal versus the state.
  *
- * @param[in]  state  The state
+ * @param[in]  state  The current state 
+ * @param[in]  goal   The goal state
  *
- * @return     { description_of_the_return_value }
+ * @return     The total distance
  */
 float Solver::manhattanDistance(vector<vector<int> > state, vector<vector<int> > goal) {
 	//[tileNumber].first == x coordinate, [tileNumber].second == y coordinate
@@ -287,6 +309,15 @@ float Solver::manhattanDistance(vector<vector<int> > state, vector<vector<int> >
 }
 
 
+/**
+ * @brief      Generates the total straight line distance between each tile in
+ *             the goal versus the state.
+ *
+ * @param[in]  state  The current state
+ * @param[in]  goal   The goal state
+ *
+ * @return     The total distance
+ */
 float Solver::straightLineDistance(vector<vector<int> > state, vector<vector<int> > goal) {
 	//[tileNumber].first == x coordinate, [tileNumber].second == y coordinate
 	vector<pair<int, int>> stateCoords(state.size()*state[0].size());

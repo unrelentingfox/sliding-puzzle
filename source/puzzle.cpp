@@ -1,3 +1,6 @@
+/**
+ * puzzle.cpp
+ */
 #include "puzzle.h"
 
 /**
