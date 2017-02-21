@@ -27,6 +27,3 @@
 *.exe
 *.out
 *.app
-
-#ignore the bin folder
-/bin
