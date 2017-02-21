@@ -4,7 +4,6 @@
 #include "board.h"
 #include <list>
 #include <unordered_set>
-#include <unordered_map>
 #include <unistd.h>
 #include <utility>
 #include <time.h>
@@ -47,21 +46,26 @@ protected:
 		}
 	};
 
-	void generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList);
-	void generateNodesAStar(Node* current, list<Node*>& openList, unordered_set<long>& closedList, vector<vector<int> > goalState);
-	void generateNodesNoClosed(Node* current, list<Node*>& openList);
+	void Solve(Board* board, string type);
+	void generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList, Board* board, string type);
 	long hashFunction(vector<vector<int> >);
-	void moveState(Node* &state, int direction);
+	void moveState(Node*& state, int direction);
 	bool compareStates(const vector<vector<int> >& s1, const vector<vector<int> >& s2);
 	int manhattanDistance(vector<vector<int> > state, vector<vector<int> > goal);
-	vector<vector<int> > copyState(vector<vector<int> >& state);
+	void PrintResult(Node* current, float time, int nodes, Board* board, string type);
+
 
 public:
-	void BFSSolve(Board* board);
-	void AStarSolve(Board* board);
-	void BFSSolveNoClosed(Board* board);
 
-
+	void DFSSolve(Board* board) {
+		Solve(board, "DFS");
+	};
+	void BFSSolve(Board* board) {
+		Solve(board, "BFS");
+	};
+	void AStarSolve(Board* board) {
+		Solve(board, "ASTAR");
+	};
 };
 
 #endif

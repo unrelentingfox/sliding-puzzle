@@ -14,7 +14,7 @@ void Puzzle::start() {
 	while (input != 'q') {
 		cout << "------------------------------------------------------------\n";
 		cout << "Use the WASD keys to slide tiles surrounding the empty tile.\n";
-		cout << "Quit (q)   Randomize(1)   BFSNCL(8)   BFSCL(9)   A*(0)   \n";
+		cout << "Quit (q)  Shuffle(1)                 DFS(8)   BFS(9)   A*(0)   \n";
 		cout << "------------------------------------------------------------\n";
 		board->print();
 		cout << "------------------------------------------------------------\n";
@@ -32,7 +32,7 @@ void Puzzle::start() {
 		else if (input == '1')
 			board->scramble(100);
 		else if (input == '8')
-			solver->BFSSolveNoClosed(board);
+			solver->DFSSolve(board);
 		else if (input == '9')
 			solver->BFSSolve(board);
 		else if (input == '0')

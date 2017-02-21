@@ -6,56 +6,96 @@
  *             algorithm
  *
  * @param      board  The board that is to be solved
+ * @param[in]  type   The type of algorithm to use (DFS, BFS, ASTAR)
  */
-void Solver::BFSSolve(Board* board) {
+void Solver::Solve(Board* board, string type) {
 	list<Node*> openList;
 	unordered_set<long> closedList;
-	list<int> solution;
 	bool success = false;
-	Node* start = new Node();
-	start->state = board->getCurrState();
-	openList.push_back(start);
+	Node* current = new Node();
+	current->state = board->getCurrState();
+	current->estimateToGoal = manhattanDistance(current->state, board->getGoalState());
+	openList.push_back(current);
 	int nodes;
 	clock_t before = clock();
 
 	for (nodes = 0; success == false; nodes++) {
-		generateNodes(openList.front(), openList, closedList);
+		//Pop the current state off of the openlist.
+		current = openList.front();
+		openList.pop_front();
 
-		if (compareStates(openList.front()->state, board->getGoalState())) {
+		//Check if OpenList.front is goal state
+		if (compareStates(current->state, board->getGoalState())) {
 			success = true;
 		}
-		else {
+
+		//Generate child nodes
+		if (success == false) {
+			generateNodes(current, openList, closedList, board, type);
 			// cout << "Nodes visited: " << nodes << endl;
-			closedList.insert(hashFunction(openList.front()->state));
-			openList.pop_front();
+			closedList.insert(hashFunction(current->state));
 		}
 	}
 
 	clock_t after = clock();
 	float time = ((float)after - (float)before) / CLOCKS_PER_SEC;
-	Node* temp = openList.front();
-	int moves;
+	PrintResult(current, time, nodes, board, type);
+}
 
-	for (moves = 0; temp->parent != NULL; moves++) {
-		solution.push_back(temp->parentMove);
-		temp = temp->parent;
+
+/**
+ * @brief      Generates all of the possible neighboring states for the current
+ *             state, not including any states that are on the closed list.
+ *
+ * @param      current     The current state
+ * @param      openList    The open list
+ * @param      closedList  The closed list
+ */
+void Solver::generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList, Board* board, string type) {
+	Node* child;
+	long childKey;
+
+	for (int i = 0; i < 4; i++) {
+		child = new Node(current);
+		moveState(child, i);
+		child->estimateToGoal = manhattanDistance(child->state, board->getGoalState());
+		childKey = hashFunction(child->state);
+		bool unique = true;
+
+		if (compareStates(current->state, child->state)
+		        || closedList.find(childKey) != closedList.end()) {
+			unique = false;
+		}
+
+		if (unique == true) {
+			if (type == "DFS") {
+				openList.push_front(child);
+			}
+			else if (type == "BFS") {
+				openList.push_back(child);
+			}
+			else if (type == "ASTAR") {
+				bool inserted = false;
+				list<Node*>::iterator it;
+
+				// usleep(50000);
+				for (it = openList.begin(); inserted == false && it != openList.end(); it++) {
+					if ((child->totalMoves + child->estimateToGoal) < ((*it)->totalMoves + (*it)->estimateToGoal)) {
+						openList.insert(it, child);
+						inserted = true;
+					}
+				}
+
+				//If the child was not better than anything on the openList then insert at the end.
+				if (inserted == false) {
+					openList.push_back(child);
+				}
+			}
+		}
+		else {
+			delete child;
+		}
 	}
-
-	cout << "---------------------------SOLVER---------------------------\n";
-	board->print();
-
-	while (!solution.empty()) {
-		usleep(500000);
-		board->move(solution.back());
-		cout << "---------------------------SOLVER---------------------------\n";
-		board->print();
-		solution.pop_back();
-	}
-
-	cout << "------------------------SOLVER-STATS------------------------\n";
-	cout << "Runtime: " << time << " seconds." << endl;
-	cout << "Checked: " << nodes << " nodes." << endl;
-	cout << "Moves: " << moves << " moves." << endl;
 }
 
 
@@ -82,7 +122,6 @@ long Solver::hashFunction(vector<vector<int> > matrix) {
 		}
 	}
 
-	// cout << returnVal << endl;
 	return returnVal;
 }
 
@@ -112,156 +151,44 @@ bool Solver::compareStates(const vector<vector<int> >& s1, const vector<vector<i
 }
 
 
-/**
- * @brief      Generates all of the possible neighboring states for the current
- *             state, not including any states that are on the closed list.
- *
- * @param      current     The current state
- * @param      openList    The open list
- * @param      closedList  The closed list
- */
-void Solver::generateNodes(Node* current, list<Node*>& openList, unordered_set<long>& closedList) {
-	Node* temp;
-
-	for (int i = 0; i < 4; i++) {
-		temp = new Node(current);
-		moveState(temp, i);
-		bool unique = true;
-
-		if (closedList.find(hashFunction(temp->state)) != closedList.end()) {
-			unique = false;
-		}
-
-		if (unique == true) {
-			openList.push_back(temp);
-		}
-		else {
-			delete temp;
-		}
-	}
-}
-
-
-/**
- * @brief      Main solver function that handles the A* Search algorithm
- *
- * @param      board  The board that is to be solved
- */
-void Solver::AStarSolve(Board* board) {
-	list<Node*> openList;
-	unordered_set<long> closedList;
+void Solver::PrintResult(Node* current, float time, int nodes, Board* board, string type) {
 	list<int> solution;
-	bool success = false;
-	Node* start = new Node();
-	Node* temp;
-	start->state = board->getCurrState();
-	start->estimateToGoal = manhattanDistance(start->state, board->getGoalState());
-	openList.push_front(start);
-	int nodes; //Counter to see how many nodes are checked by the algorithm before finding the goal
-	clock_t before = clock();
-
-	//Main Loop that handles the search
-	for (nodes = 0; success == false; nodes++) {
-		generateNodesAStar(openList.front(), openList, closedList, board->getGoalState());
-
-		//Check if the next state on the open list is the goal state
-		if (compareStates(openList.front()->state, board->getGoalState())) {
-			success = true;
-		}
-		else {
-			cout << "Nodes visited: " << nodes << endl;
-			openList.pop_front();
-		}
-	}
-
-	clock_t after = clock();
-	float time = ((float)after - (float)before) / CLOCKS_PER_SEC;
-	temp = openList.front();
 	int moves;
 
-	for (moves = 0; temp->parent != NULL; moves++) {
-		solution.push_back(temp->parentMove);
-		temp = temp->parent;
+	for (moves = 0; current->parent != NULL; moves++) {
+		solution.push_back(current->parentMove);
+		current = current->parent;
 	}
 
 	cout << "---------------------------SOLVER---------------------------\n";
 	board->print();
 
 	while (!solution.empty()) {
-		usleep(500000);
+		if (type != "DFS") {
+			usleep(500000);
+		}
+
 		board->move(solution.back());
-		cout << "---------------------------SOLVER---------------------------\n";
-		board->print();
+
+		if (type != "DFS") {
+			cout << "---------------------------SOLVER---------------------------\n";
+			board->print();
+		}
+
 		solution.pop_back();
 	}
 
 	cout << "------------------------SOLVER-STATS------------------------\n";
+	cout << "Algorithm Type: ";
+
+	if (type == "ASTAR")
+		cout << "A*" << endl;
+	else
+		cout << type << endl;
+
 	cout << "Runtime: " << time << " seconds." << endl;
 	cout << "Checked: " << nodes << " nodes." << endl;
 	cout << "Moves: " << moves << " moves." << endl;
-}
-
-
-/**
- * @brief      Generates all of the possible neighboring states for the current
- *             state, not including any states that are on the closed list.
- *
- * @param      current     The current state
- * @param      openList    The open list
- * @param      closedList  The closed list
- */
-void Solver::generateNodesAStar(Node* current, list<Node*>& openList, unordered_set<long>& closedList, vector<vector<int> > goalState) {
-	Node* temp;
-	Node* closedListState;
-	long tempKey;
-	bool unique;
-	bool inserted;
-	list<Node*>::iterator it;
-
-	//Create a new state for each possible move
-	for (int i = 0; i < 4; i++) {
-		temp = new Node(current);
-		moveState(temp, i);
-		temp->estimateToGoal = manhattanDistance(temp->state, goalState);
-		tempKey = hashFunction(temp->state);
-		unique = true;
-		cout << tempKey << endl;
-		cout << temp->estimateToGoal << " " << temp->totalMoves << endl;
-		cout << temp->parentMove << endl;
-
-		if (closedList.find(tempKey) != closedList.end()) {
-			cout << "Not unique\n";
-			unique = false;
-		}
-		else {
-			closedList.insert(tempKey);
-		}
-
-		//sort the new node into the open list based on distance
-		if (unique == true) {
-			inserted = false;
-
-			// usleep(50000);
-			for (it = openList.begin(); inserted == false && it != openList.end(); it++) {
-				if ((temp->totalMoves + temp->estimateToGoal) < ((*it)->totalMoves + (*it)->estimateToGoal)) {
-					cout << (temp->estimateToGoal + temp->totalMoves) << "is less than" << ((*it)->estimateToGoal + (*it)->totalMoves) << endl;
-					openList.insert(it, temp);
-					inserted = true;
-					cout << "inserted inside\n";
-				}
-			}
-
-			if (inserted == false) {
-				cout << "inserted outside\n";
-				openList.push_back(temp);
-			}
-		}
-		else {
-			delete temp;
-		}
-	}
-
-	cout << "made it out\n";
 }
 
 
@@ -365,78 +292,4 @@ void Solver::moveState(Node*& node, int direction) {
 	//iterate the move counter on the Node and record the direction
 	node->parentMove = direction;
 	node->totalMoves++;
-}
-
-
-void Solver::BFSSolveNoClosed(Board* board) {
-	list<Node*> openList;
-	unordered_set<long> closedList;
-	list<int> solution;
-	bool success = false;
-	Node* start = new Node();
-	start->state = board->getCurrState();
-	openList.push_back(start);
-	int nodes;
-	clock_t before = clock();
-
-	for (nodes = 0; success == false; nodes++) {
-		generateNodes(openList.front(), openList, closedList);
-
-		if (compareStates(openList.front()->state, board->getGoalState())) {
-			success = true;
-		}
-		else {
-			// cout << "Nodes visited: " << nodes << endl;
-			// closedList.insert(hashFunction(openList.front()->state));
-			openList.pop_front();
-		}
-	}
-
-	clock_t after = clock();
-	float time = ((float)after - (float)before) / CLOCKS_PER_SEC;
-	Node* temp = openList.front();
-	int moves;
-
-	for (moves = 0; temp->parent != NULL; moves++) {
-		solution.push_back(temp->parentMove);
-		temp = temp->parent;
-	}
-
-	cout << "---------------------------SOLVER---------------------------\n";
-	board->print();
-
-	while (!solution.empty()) {
-		usleep(500000);
-		board->move(solution.back());
-		cout << "---------------------------SOLVER---------------------------\n";
-		board->print();
-		solution.pop_back();
-	}
-
-	cout << "------------------------SOLVER-STATS------------------------\n";
-	cout << "Runtime: " << time << " seconds." << endl;
-	cout << "Checked: " << nodes << " nodes." << endl;
-	cout << "Moves: " << moves << " moves." << endl;
-}
-
-
-void Solver::generateNodesNoClosed(Node* current, list<Node*>& openList) {
-	Node* temp;
-
-	for (int i = 0; i < 4; i++) {
-		temp = new Node(current);
-		moveState(temp, i);
-		bool unique = true;
-
-		if (compareStates(current->state, temp->state)) {
-			unique = false;
-		}
-
-		if (unique == true) {
-			openList.push_back(temp);
-		}
-		else {
-			delete temp;
-		}
-	}
 }
