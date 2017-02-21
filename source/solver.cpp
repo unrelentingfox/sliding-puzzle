@@ -1,5 +1,26 @@
 #include "solver.h"
 
+void Solver::BFSSolve(Board* board, bool printMoves) {
+	Solve(board, 1, printMoves);
+}
+
+void Solver::BFSClosedListSolve(Board* board, bool printMoves) {
+	Solve(board, 2, printMoves);
+}
+
+void Solver::DFSSolve(Board* board, bool printMoves) {
+	//depth first search traverses too many nodes to print.
+	Solve(board, 3, false);
+}
+
+void Solver::AStarSolveManhattanDist(Board* board, bool printMoves) {
+	Solve(board, 4, printMoves);
+}
+
+void Solver::AStarSolveStraightLineDist(Board* board, bool printMoves) {
+	Solve(board, 5, printMoves);
+}
+
 
 /**
  * @brief      Main solver function that handles the Breadth first search
@@ -8,7 +29,7 @@
  * @param      board  The board that is to be solved
  * @param[in]  type   The type of algorithm to use (DFS, BFS, ASTAR)
  */
-void Solver::Solve(Board* board, int type) {
+void Solver::Solve(Board* board, int type, bool printMoves) {
 	list<Node*> openList;
 	unordered_set<long> closedList;
 	bool success = false;
@@ -25,7 +46,7 @@ void Solver::Solve(Board* board, int type) {
 	int nodes;
 	clock_t before = clock();
 
-	for (nodes = 0; success == false; nodes++) {
+	for (nodes = 0; success == false && nodes < 3000000; nodes++) {
 		//Pop the current state off of the openlist.
 		current = openList.front();
 		openList.pop_front();
@@ -48,7 +69,7 @@ void Solver::Solve(Board* board, int type) {
 
 	clock_t after = clock();
 	float time = ((float)after - (float)before) / CLOCKS_PER_SEC;
-	PrintResult(current, time, nodes, board, type);
+	PrintResult(current, time, nodes, board, type, printMoves);
 }
 
 
@@ -172,7 +193,7 @@ bool Solver::compareStates(const vector<vector<int> >& s1, const vector<vector<i
 }
 
 
-void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int type) {
+void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int type, bool printMoves) {
 	list<int> solution;
 	int moves;
 
@@ -181,26 +202,23 @@ void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int
 		current = current->parent;
 	}
 
-	cout << "---------------------------SOLVER---------------------------\n";
-	board->print();
-
-	//Print out the moves unless you are using Depth First Search (3)
-	while (!solution.empty()) {
-		if (type != 3) {
-			usleep(500000);
-		}
-
-		board->move(solution.back());
-
-		if (type != 3) {
-			cout << "---------------------------SOLVER---------------------------\n";
-			board->print();
-		}
-
-		solution.pop_back();
+	if (printMoves) {
+		cout << "---------------------------SOLVER----------------------------*\n";
+		board->print();
 	}
 
-	cout << "------------------------SOLVER-STATS------------------------\n";
+	while (!solution.empty()) {
+		board->move(solution.back());
+		solution.pop_back();
+
+		if (printMoves) {
+			cout << "---------------------------SOLVER----------------------------*\n";
+			board->print();
+			usleep(500000);
+		}
+	}
+
+	cout << "------------------------SOLVER-STATS-------------------------*\n";
 	cout << "Algorithm: ";
 
 	switch (type) {
