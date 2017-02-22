@@ -1,4 +1,7 @@
 # cs470-sliding-puzzle
+
+![alt tag](https://raw.githubusercontent.com/dustin-fox/cs470-sliding-puzzle/master/documentation/readme_screenshots/Sliding8Puzzle.PNG)
+
 This project is meant to help me explore different search techniques used in artificial intelligence to solve a sliding 8 puzzle.
 The Sliding 8 puzzle is fully playable and it also incorporates the following 5 algorithms to automatically solve the puzzle:
 
