@@ -273,7 +273,7 @@ void Solver::PrintResult(Node* current, float time, int nodes, Board* board, int
  * @brief      Generates the total straight line distance between each tile in
  *             the goal versus the state.
  *
- * @param[in]  state  The current state 
+ * @param[in]  state  The current state
  * @param[in]  goal   The goal state
  *
  * @return     The total distance
